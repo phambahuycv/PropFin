@@ -1,0 +1,58 @@
+================================================================================
+          HƯỚNG DẪN SỬ DỤNG PHẦN MỀM PROPFIN (CHO NGƯỜI MỚI BẮT ĐẦU)
+================================================================================
+
+Chào mừng bạn đến với PropFin - Hệ thống quản lý Chi tiêu & Quản lý Nhà trọ cho thuê!
+
+Dưới đây là 3 bước cực kỳ đơn giản để bạn mở và sử dụng ứng dụng ngay trên máy tính:
+
+--------------------------------------------------------------------------------
+BƯỚC 1: KHỞI ĐỘNG ỨNG DỤNG (CHỈ CẦN 1 CÚ CLICK CHUỘT)
+--------------------------------------------------------------------------------
+1. Trong thư mục này, bạn tìm và bấm đúp chuột vào file:
+   👉 Khoi_Dong_PropFin.bat
+
+2. Hệ thống sẽ tự động kiểm tra và làm tất cả cho bạn:
+   - Nếu máy bạn ĐÃ CÓ Python: Ứng dụng sẽ tự động chạy và TỰ MỞ TRÌNH DUYỆT WEB
+     tại địa chỉ: http://127.0.0.1:8000
+   
+   - Nếu máy bạn CHƯA CÓ Python: Cửa sổ màu đen sẽ hỏi bạn:
+     "Bạn có muốn PropFin tự động tải & cài đặt Python chính thức cho bạn không?"
+     -> Bạn chỉ cần gõ chữ Y rồi bấm phím Enter.
+     -> Hệ thống sẽ tự động cài Python cho bạn từ nguồn chính thức của Microsoft.
+     -> Sau khi cài xong, bạn chỉ cần bấm lại vào file Khoi_Dong_PropFin.bat là xong!
+
+--------------------------------------------------------------------------------
+BƯỚC 2: TẠO BIỂU TƯỢNG RA MÀN HÌNH CHÍNH (DESKTOP)
+--------------------------------------------------------------------------------
+1. Bấm đúp chuột vào file:
+   👉 Tao_Shortcut_Desktop.bat
+
+2. Một biểu tượng mang tên "PropFin - Quản lý Chi tiêu & Nhà trọ" sẽ xuất hiện
+   ngay trên màn hình Desktop của bạn.
+   Từ những lần sau, bạn chỉ cần bấm vào biểu tượng ngoài Desktop để dùng ứng dụng!
+
+--------------------------------------------------------------------------------
+BƯỚC 3: DÙNG TRÊN ĐIỆN THOẠI KHI ĐI CHỐT ĐIỆN NƯỚC (CÙNG WIFI)
+--------------------------------------------------------------------------------
+1. Bật máy tính có chạy ứng dụng PropFin (kết nối Wi-Fi nhà bạn).
+2. Mở cửa sổ cmd trên máy tính, gõ: ipconfig -> Xem dòng IPv4 Address (ví dụ: 192.168.1.15).
+3. Mở trình duyệt trên điện thoại (Safari hoặc Chrome), gõ:
+   http://192.168.1.15:8000
+   -> Bạn có thể chốt số điện nước, xem phòng ngay trên điện thoại!
+
+--------------------------------------------------------------------------------
+BẢO LƯU DỮ LIỆU CỦA BẠN (BACKUP):
+--------------------------------------------------------------------------------
+- Toàn bộ dữ liệu của bạn nằm trong 1 file duy nhất là: propfin.db
+- Bạn chỉ cần copy file propfin.db này cất đi (lên Google Drive, USB...).
+- Khi đổi máy tính hoặc cài lại Windows, chỉ cần copy lại file propfin.db vào thư mục
+  là dữ liệu nguyên vẹn 100%!
+
+--------------------------------------------------------------------------------
+CÁCH TẮT ỨNG DỤNG KHI DÙNG XONG:
+--------------------------------------------------------------------------------
+- Đóng cửa sổ màu đen (Command Prompt) có tiêu đề "PropFin" là xong.
+
+Chúc bạn quản lý tài chính và nhà trọ thật hiệu quả cùng PropFin!
+================================================================================

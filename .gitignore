@@ -1,0 +1,25 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs & temp files
+*.log
+scratch/
+.system_generated/
+
+# Database SQLite: Bỏ dấu # ở dòng dưới nếu bạn muốn giữ dữ liệu chi tiêu cá nhân riêng tư không đưa lên GitHub
+# propfin.db
