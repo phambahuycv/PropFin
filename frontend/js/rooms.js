@@ -195,6 +195,57 @@ const roomsModule = {
         if (rateEl) rateEl.textContent = `${occupancy}%`;
     },
 
+    // --- Hỗ trợ cấu hình tầng theo Căn hộ / Tòa nhà ---
+    updateFloorOptionsForProperty(propertyId, selectedFloor = 1) {
+        const floorSelect = document.getElementById('roomFloorSelect');
+        if (!floorSelect) return;
+
+        let totalFloors = 5;
+        if (propertyId && window.propertiesModule?.allProperties) {
+            const prop = window.propertiesModule.allProperties.find(p => p.id == propertyId);
+            if (prop && prop.total_floors) {
+                totalFloors = Math.max(prop.total_floors, 1);
+            }
+        }
+
+        // Tầng luôn bắt đầu từ Tầng 1 đến tổng số tầng của căn hộ (hoặc tầng hiện tại của phòng)
+        const maxF = Math.max(totalFloors, parseInt(selectedFloor) || 1);
+        let optionsHtml = '';
+        for (let f = 1; f <= maxF; f++) {
+            optionsHtml += `<option value="${f}">Tầng ${f}</option>`;
+        }
+        floorSelect.innerHTML = optionsHtml;
+        floorSelect.value = selectedFloor || 1;
+    },
+
+    updateFilterFloorOptions(propertyId = '') {
+        const filterFloor = document.getElementById('filterRoomFloor');
+        if (!filterFloor) return;
+
+        const currentVal = filterFloor.value;
+        let maxF = 5;
+        if (propertyId && window.propertiesModule?.allProperties) {
+            const prop = window.propertiesModule.allProperties.find(p => p.id == propertyId);
+            if (prop && prop.total_floors) {
+                maxF = Math.max(prop.total_floors, 1);
+            }
+        } else if (window.propertiesModule?.allProperties) {
+            // Lấy tầng lớn nhất của tất cả các tòa
+            maxF = Math.max(...window.propertiesModule.allProperties.map(p => p.total_floors || 1), 5);
+        }
+
+        let html = '<option value="">Tất cả tầng</option>';
+        for (let f = 1; f <= maxF; f++) {
+            html += `<option value="${f}">Tầng ${f}</option>`;
+        }
+        filterFloor.innerHTML = html;
+        if (currentVal && parseInt(currentVal) <= maxF) {
+            filterFloor.value = currentVal;
+        } else {
+            filterFloor.value = '';
+        }
+    },
+
     // --- Modal: Thêm / Sửa Phòng ---
     openAddRoomModal(preselectedPropId = null) {
         this.selectedRoom = null;
@@ -203,9 +254,19 @@ const roomsModule = {
         document.getElementById('roomEditId').value = '';
 
         const propSelect = document.getElementById('roomPropertySelect');
-        if (propSelect && preselectedPropId) {
-            propSelect.value = preselectedPropId;
+        let targetPropId = preselectedPropId;
+        if (propSelect) {
+            if (preselectedPropId) {
+                propSelect.value = preselectedPropId;
+            } else if (propSelect.value) {
+                targetPropId = propSelect.value;
+            } else if (propSelect.options.length > 0) {
+                targetPropId = propSelect.options[0].value;
+            }
         }
+
+        // Tự động sinh danh sách tầng từ 1 đến N theo căn hộ được chọn
+        this.updateFloorOptionsForProperty(targetPropId, 1);
 
         const btnDelete = document.getElementById('btnDeleteRoomInModal');
         if (btnDelete) btnDelete.style.display = 'none';
@@ -219,9 +280,14 @@ const roomsModule = {
 
         document.getElementById('modalRoomTitle').textContent = `Chỉnh sửa phòng ${room.room_code}`;
         document.getElementById('roomEditId').value = room.id;
+        const targetPropId = room.property_id || 1;
         if (document.getElementById('roomPropertySelect')) {
-            document.getElementById('roomPropertySelect').value = room.property_id || 1;
+            document.getElementById('roomPropertySelect').value = targetPropId;
         }
+
+        // Sinh danh sách tầng bắt đầu từ Tầng 1 đến số tầng của tòa và chọn đúng tầng hiện tại
+        this.updateFloorOptionsForProperty(targetPropId, room.floor);
+
         document.getElementById('roomCodeInput').value = room.room_code;
         document.getElementById('roomFloorSelect').value = room.floor;
         document.getElementById('roomPositionSelect').value = room.position;
@@ -444,6 +510,20 @@ const roomsModule = {
         const formContract = document.getElementById('formContract');
         if (formContract) formContract.addEventListener('submit', (e) => this.handleSaveContract(e));
 
+        const roomPropSelect = document.getElementById('roomPropertySelect');
+        if (roomPropSelect) {
+            roomPropSelect.addEventListener('change', (e) => {
+                this.updateFloorOptionsForProperty(e.target.value, 1);
+            });
+        }
+
+        const filterProp = document.getElementById('filterRoomProperty');
+        if (filterProp) {
+            filterProp.addEventListener('change', (e) => {
+                this.updateFilterFloorOptions(e.target.value);
+            });
+        }
+
         ['filterRoomProperty', 'filterRoomFloor', 'filterRoomPosition', 'filterRoomStatus'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener('change', () => this.loadRooms());
@@ -452,3 +532,4 @@ const roomsModule = {
 };
 
 window.roomsModule = roomsModule;
+

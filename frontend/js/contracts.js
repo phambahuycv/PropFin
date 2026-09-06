@@ -168,20 +168,38 @@ const contractsModule = {
         }
 
         try {
-            // Lấy danh sách các phòng còn TRỐNG của căn hộ này
-            const rooms = await api.getRooms({ property_id: propertyId, status: 'empty' });
+            // Lấy danh sách phòng của căn hộ này
+            const rooms = await api.getRooms({ property_id: propertyId });
             this.availableRooms = rooms;
 
             if (rooms.length === 0) {
-                roomSelect.innerHTML = '<option value="">-- Hết phòng trống trong căn hộ này --</option>';
+                roomSelect.innerHTML = '<option value="">-- Căn hộ này hiện chưa có phòng nào --</option>';
                 roomSelect.disabled = true;
             } else {
-                roomSelect.innerHTML = '<option value="">-- Chọn phòng trống để ký HĐ --</option>' + 
-                    rooms.map(r => `<option value="${r.id}" data-price="${r.base_price}" data-deposit="${r.default_deposit}">${r.room_code} (Tầng ${r.floor} - ${r.position === 'outside' ? 'Mặt ngoài' : 'Mặt trong'} - ${window.formatCurrency(r.base_price)}/tháng)</option>`).join('');
+                let optionsHtml = '<option value="">-- Chọn phòng để ký hợp đồng --</option>';
+                rooms.forEach(r => {
+                    const isRented = r.status === 'rented';
+                    const isMaintenance = r.status === 'maintenance';
+                    let statusLabel = '🟢 Còn trống';
+                    let disabledAttr = '';
+
+                    if (isRented) {
+                        statusLabel = `🔵 Đang thuê (${r.tenant_name || 'Đã có khách'})`;
+                        disabledAttr = 'disabled';
+                    } else if (isMaintenance) {
+                        statusLabel = '🟡 Đang bảo trì';
+                    }
+
+                    optionsHtml += `<option value="${r.id}" ${disabledAttr} data-price="${r.base_price}" data-deposit="${r.default_deposit || r.base_price}">
+                        ${r.room_code} - ${statusLabel} (Tầng ${r.floor} - ${window.formatCurrency(r.base_price)}/tháng)
+                    </option>`;
+                });
+
+                roomSelect.innerHTML = optionsHtml;
                 roomSelect.disabled = false;
             }
         } catch (error) {
-            window.showToast('Lỗi khi tải danh sách phòng trống: ' + error.message, 'error');
+            window.showToast('Lỗi khi tải danh sách phòng: ' + error.message, 'error');
         }
     },
 
